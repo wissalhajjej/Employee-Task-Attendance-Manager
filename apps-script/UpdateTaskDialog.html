@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+    button { background: #4285f4; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; }
+    .message { margin-top: 15px; padding: 10px; border-radius: 4px; display: none; }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <h2>Update Task Status</h2>
+  <div class="form-group">
+    <label>Select Task:</label>
+    <select id="task"><option value="">Select Task</option></select>
+  </div>
+  <div class="form-group">
+    <label>New Status:</label>
+    <select id="status">
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+    </select>
+  </div>
+  <button onclick="submitUpdate()">Update</button>
+  <div id="message" class="message"></div>
+  
+  <script>
+    google.script.run.withSuccessHandler(function(tasks) {
+      const sel = document.getElementById('task');
+      tasks.forEach(task => {
+        const opt = document.createElement('option');
+        opt.value = task.id;
+        opt.text = task.id + ' - ' + task.name;
+        sel.appendChild(opt);
+      });
+    }).getPendingTasks();
+    
+    function submitUpdate() {
+      const taskId = document.getElementById('task').value;
+      const status = document.getElementById('status').value;
+      
+      if (!taskId) {
+        showMessage('Please select a task', 'error');
+        return;
+      }
+      
+      google.script.run
+        .withSuccessHandler(function(msg) {
+          showMessage(msg, 'success');
+          setTimeout(() => google.script.host.close(), 1500);
+        })
+        .withFailureHandler(function(err) {
+          showMessage('Error: ' + err.message, 'error');
+        })
+        .updateTaskStatus(taskId, status);
+    }
+    
+    function showMessage(text, type) {
+      const msg = document.getElementById('message');
+      msg.textContent = text;
+      msg.className = 'message ' + type;
+      msg.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

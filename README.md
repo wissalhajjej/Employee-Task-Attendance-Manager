@@ -1,45 +1,34 @@
-# 👥 Employee Task & Attendance Manager
+# Employee Task & Attendance Manager
 
-A comprehensive Excel-based management system to track
-employee tasks, attendance, and records.
+Web application built with Google Apps Script and Google Sheets to manage employee attendance and tasks, with role-based access (Admin and User).
 
-## 🌟 Features
+## Features
 
-### 👤 Employee Management
-- Store employee profiles (ID, Name, Email, Department)
-- Track employee positions and status
-- Role-based access (Admin / User)
+- Login with Employee ID, with Admin and User roles
+- Attendance: check in and check out
+- Tasks: create, assign and update
+- Reports and dashboard
 
-### 📅 Attendance Tracking
-- Daily check-in and check-out times
-- Automatic total hours calculation
-- Attendance status (Present / Absent / Late)
+## Technologies
 
-### ✅ Task Management
-- Assign tasks to employees
-- Set priority levels (High / Medium / Low)
-- Track task status (Pending / In Progress / Completed)
-- Set due dates and completion dates
-- Add notes to each task
+Google Apps Script (JavaScript) | HTML | CSS | Google Sheets (used as the database)
 
-### 📊 Dashboard
-- Overview of all employee activities
-- Quick summary of attendance and tasks
+## Project structure
 
-## 🛠️ Technologies Used
-- Microsoft Excel
-- Advanced Excel Formulas
-- Data Validation
-- Excel Dashboard
+- `apps-script/Code.gs`: server-side logic (login, attendance, tasks, reports)
+- `apps-script/index.html`: main interface of the web app
+- `apps-script/*Dialog.html`: dialogs for attendance, tasks, task updates and reports
 
-## 🚀 How to Use
-1. Download the Excel file
-2. Open with Microsoft Excel
-3. Add employees in the Employees sheet
-4. Track attendance in the Attendance sheet
-5. Assign tasks in the Tasks sheet
-6. View summary in the Dashboard
+## How to run
 
-## 👩‍💻 Author
-Wissal Hajjej — Computer Engineering Student
-Girne American University
+1. Create a Google Sheet with the sheets `Employees`, `Attendance`, `Tasks` and `Dashboard`. The `Employees` sheet has the columns Employee ID, Name, Email, Department, Position, Status, Role.
+2. In the sheet, open Extensions > Apps Script and copy the files from `apps-script/` into the project.
+3. Click Deploy > New deployment > Web app, then open the link.
+
+## Limitations
+
+The login uses the Employee ID only, without a password. It is a demo; a real deployment would add password authentication.
+
+## Author
+
+Wissal Hajjej, Computer Engineering student at Girne American University (graduating June 2027)

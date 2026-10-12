@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Manager Pro</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0f23;
+      min-height: 100vh;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15), transparent 70%),
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.15), transparent 70%),
+        radial-gradient(circle at 40% 80%, rgba(59, 130, 246, 0.15), transparent 70%);
+      animation: float 20s ease-in-out infinite;
+      pointer-events: none;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      33% { transform: translate(30px, -30px); }
+      66% { transform: translate(-20px, 20px); }
+    }
+    
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* LOGIN SCREEN STYLES */
+    .login-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .login-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+      backdrop-filter: blur(20px);
+      padding: 50px 40px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      max-width: 450px;
+      width: 100%;
+      text-align: center;
+      animation: slideUp 0.6s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .login-box h1 {
+      font-size: 36px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #6366f1, #ec4899, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 15px;
+    }
+    
+    .login-box p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-bottom: 35px;
+      font-size: 15px;
+    }
+    
+    .login-icon {
+      font-size: 80px;
+      margin-bottom: 25px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+    
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .login-form input {
+      width: 100%;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 16px;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+    
+    .login-form input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    .login-form button {
+      width: 100%;
+      padding: 16px;
+      margin-top: 10px;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+    
+    header {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+      backdrop-filter: blur(20px);
+      padding: 30px 40px;
+      border-radius: 24px;
+      margin-bottom: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: slideDown 0.6s ease-out;
+    }
+    
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    header h1 {
+      font-size: 32px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #6366f1, #ec4899, #06b6d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    header p {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .user-badge {
+      background: rgba(99, 102, 241, 0.2);
+      padding: 10px 20px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .role-badge {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+    }
+    
+    .logout-btn {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      padding: 10px 20px;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background: rgba(239, 68, 68, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.05));
+      backdrop-filter: blur(20px);
+      padding: 25px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: fadeInUp 0.6s ease-out backwards;
+      cursor: pointer;
+      position: relative;
+    }
+    
+    .stat-card::after {
+      content: '→';
+      position: absolute;
+      top: 25px;
+      right: 25px;
+      font-size: 24px;
+      color: rgba(255, 255, 255, 0.3);
+      transition: all 0.3s;
+    }
+    
+    .stat-card:hover::after {
+      color: rgba(255, 255, 255, 0.8);
+      transform: translateX(5px);
+    }
+    
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; }
+    .stat-card:nth-child(5) { animation-delay: 0.5s; }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+    
+    .stat-card:active {
+      transform: translateY(-4px) scale(0.98);
+    }
+    
+    .stat-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+    
+    .stat-card h3 {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+    
+    .stat-card .number {
+      font-size: 42px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #fff, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stat-trend {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 13px;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      overflow-x: auto;
+      padding: 5px;
+    }
+    
+    .tab {
+      background: rgba(255, 255, 255, 0.05);
+      color: rgba(255, 255, 255, 0.7);
+      padding: 14px 28px;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      cursor: pointer;
+      transition: all 0.3s;
+      font-weight: 700;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+    
+    .tab:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateY(-2px);
+    }
+    
+    .tab.active {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      color: white;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+    
+    .content {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(236, 72, 153, 0.02));
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      display: none;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .content.active { display: block; }
+    
+    .content h2 {
+      color: white;
+      font-size: 28px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+    
+    .content > p {
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 30px;
+    }
+    
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+    
+    label {
+      display: block;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 700;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    input, select, textarea {
+      width: 100%;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s;
+      font-family: inherit;
+    }
+    
+    select option {
+      background: #1a1a2e;
+      color: white;
+      padding: 10px;
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    
+    /* Clockify-style Time Picker */
+    .time-input-wrapper {
+      position: relative;
+    }
+    
+    .time-input {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 16px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .time-input:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(99, 102, 241, 0.5);
+    }
+    
+    .time-input.active {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    
+    .time-display {
+      flex: 1;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+    
+    .time-icon {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 20px;
+    }
+    
+    .time-picker-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      margin-top: 8px;
+      background: rgba(30, 30, 50, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+      animation: dropdownSlide 0.3s ease-out;
+    }
+    
+    @keyframes dropdownSlide {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .time-picker-dropdown.active {
+      display: block;
+    }
+    
+    .time-selector {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .time-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .time-value {
+      background: rgba(99, 102, 241, 0.2);
+      color: white;
+      padding: 15px 25px;
+      border-radius: 12px;
+      font-size: 32px;
+      font-weight: 800;
+      min-width: 80px;
+      text-align: center;
+      border: 2px solid rgba(99, 102, 241, 0.3);
+    }
+    
+    .time-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .time-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+    
+    .time-btn:hover {
+      background: rgba(99, 102, 241, 0.3);
+      border-color: #6366f1;
+    }
+    
+    .time-separator {
+      font-size: 32px;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 800;
+      padding: 0 10px;
+    }
+    
+    .time-label {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+    
+    .time-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .time-action-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .time-action-btn.cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+    
+    .time-action-btn.apply {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      color: white;
+    }
+    
+    button {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      color: white;
+      padding: 14px 32px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+    
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 32px rgba(99, 102, 241, 0.5);
+    }
+    
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .message {
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      display: none;
+      font-weight: 600;
+    }
+    
+    .message.success {
+      background: rgba(16, 185, 129, 0.2);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    
+    .message.error {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    
+    .table-container {
+      overflow-x: auto;
+      border-radius: 16px;
+      margin-top: 25px;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    thead {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+    }
+    
+    th {
+      padding: 16px;
+      text-align: left;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    td {
+      padding: 16px;
+      color: rgba(255, 255, 255, 0.8);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    tbody tr {
+      transition: all 0.2s;
+    }
+    
+    tbody tr:hover {
+      background: rgba(99, 102, 241, 0.1);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .badge.present { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .badge.absent { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .badge.late { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .badge.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .badge.progress, .badge.inprogress { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .badge.completed { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .badge.high { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .badge.medium { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .badge.low { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    .badge.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .badge.admin { background: linear-gradient(135deg, #6366f1, #ec4899); color: white; }
+    .badge.user { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+    
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .empty-state-icon {
+      font-size: 64px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      color: white;
+      margin-bottom: 10px;
+    }
+    
+    .error-banner {
+      background: rgba(239, 68, 68, 0.2);
+      color: #ef4444;
+      padding: 16px 24px;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      display: none;
+      font-weight: 600;
+    }
+    
+    .card-section {
+      background: rgba(255, 255, 255, 0.02);
+      padding: 30px;
+      border-radius: 16px;
+      margin-top: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .card-section h3 {
+      color: white;
+      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: 800;
+    }
+    
+    @media (max-width: 768px) {
+      body { padding: 10px; }
+      header { padding: 20px; }
+      .content { padding: 25px 20px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen" class="login-container">
+    <div class="login-box">
+      <div class="login-icon">🚀</div>
+      <h1>Employee Manager Pro</h1>
+      <p>Sign in with your Employee ID</p>
+      <form class="login-form" onsubmit="handleLogin(event)">
+        <input type="text" id="loginEmployeeId" placeholder="Enter your Employee ID (e.g., E001)" required>
+        <button type="submit">Sign In</button>
+        <div id="loginMessage" class="message"></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN APP (Hidden until login) -->
+  <div id="mainApp" class="container hidden">
+    <header>
+      <div>
+        <h1>🚀 Employee Manager Pro</h1>
+        <p>Modern workforce management system</p>
+      </div>
+      <div class="user-info">
+        <div class="user-badge">
+          <span>👤 <span id="currentUserName"></span></span>
+          <span class="role-badge" id="currentUserRole"></span>
+        </div>
+        <button class="logout-btn" onclick="handleLogout()">🚪 Logout</button>
+      </div>
+    </header>
+    
+    <div id="errorBanner" class="error-banner"></div>
+    
+    <div class="stats" id="statsContainer">
+      <!-- Stats will be loaded dynamically based on role -->
+    </div>
+    
+    <div class="tabs" id="tabsContainer">
+      <!-- Tabs will be loaded dynamically based on role -->
+    </div>
+    
+    <!-- ADMIN CONTENT SECTIONS -->
+    <div id="dashboard" class="content active">
+      <h2>Dashboard</h2>
+      <p>Your team's performance at a glance</p>
+      <div class="loading">
+        <div class="spinner"></div>
+        Loading data...
+      </div>
+    </div>
+    
+    <div id="attendance" class="content">
+      <h2>Mark Attendance</h2>
+      <p>Record employee check-in and check-out</p>
+      <form id="attendanceForm" onsubmit="submitAttendance(event)">
+        <div class="form-grid">
+          <div>
+            <label>👤 Employee</label>
+            <select id="attEmployeeId" required>
+              <option value="">Select Employee</option>
+            </select>
+          </div>
+          <div>
+            <label>📌 Status</label>
+            <select id="attStatus" required>
+              <option value="">Select Status</option>
+              <option value="Present">Present</option>
+              <option value="Late">Late</option>
+              <option value="Absent">Absent</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-grid">
+          <div class="time-input-wrapper">
+            <label>🕐 Check In Time</label>
+            <div class="time-input" onclick="openTimePicker('checkIn')">
+              <span class="time-display" id="checkInDisplay">09:00</span>
+              <span class="time-icon">🕐</span>
+            </div>
+            <input type="hidden" id="attCheckIn" value="09:00">
+            
+            <div class="time-picker-dropdown" id="checkInPicker">
+              <div class="time-selector">
+                <div class="time-column">
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkIn', 'hour', 1)">▲</button>
+                  </div>
+                  <div class="time-value" id="checkInHour">09</div>
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkIn', 'hour', -1)">▼</button>
+                  </div>
+                  <div class="time-label">Hours</div>
+                </div>
+                
+                <div class="time-separator">:</div>
+                
+                <div class="time-column">
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkIn', 'minute', 15)">▲</button>
+                  </div>
+                  <div class="time-value" id="checkInMinute">00</div>
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkIn', 'minute', -15)">▼</button>
+                  </div>
+                  <div class="time-label">Minutes</div>
+                </div>
+              </div>
+              
+              <div class="time-actions">
+                <button type="button" class="time-action-btn cancel" onclick="closeTimePicker('checkIn')">Cancel</button>
+                <button type="button" class="time-action-btn apply" onclick="applyTime('checkIn')">Apply</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="time-input-wrapper">
+            <label>🕐 Check Out Time</label>
+            <div class="time-input" onclick="openTimePicker('checkOut')">
+              <span class="time-display" id="checkOutDisplay">17:00</span>
+              <span class="time-icon">🕐</span>
+            </div>
+            <input type="hidden" id="attCheckOut" value="17:00">
+            
+            <div class="time-picker-dropdown" id="checkOutPicker">
+              <div class="time-selector">
+                <div class="time-column">
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkOut', 'hour', 1)">▲</button>
+                  </div>
+                  <div class="time-value" id="checkOutHour">17</div>
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkOut', 'hour', -1)">▼</button>
+                  </div>
+                  <div class="time-label">Hours</div>
+                </div>
+                
+                <div class="time-separator">:</div>
+                
+                <div class="time-column">
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkOut', 'minute', 15)">▲</button>
+                  </div>
+                  <div class="time-value" id="checkOutMinute">00</div>
+                  <div class="time-controls">
+                    <button type="button" class="time-btn" onclick="adjustTime('checkOut', 'minute', -15)">▼</button>
+                  </div>
+                  <div class="time-label">Minutes</div>
+                </div>
+              </div>
+              
+              <div class="time-actions">
+                <button type="button" class="time-action-btn cancel" onclick="closeTimePicker('checkOut')">Cancel</button>
+                <button type="button" class="time-action-btn apply" onclick="applyTime('checkOut')">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <button type="submit">Mark Attendance</button>
+        <div id="attMessage" class="message"></div>
+      </form>
+    </div>
+    
+    <div id="tasks" class="content">
+      <h2>Task Management</h2>
+      <p>Create and track team tasks</p>
+      <form id="taskForm" onsubmit="submitTask(event)">
+        <div>
+          <label>📝 Task Name</label>
+          <input type="text" id="taskName" placeholder="e.g., Update website" required>
+        </div>
+        <div class="form-grid">
+          <div>
+            <label>👤 Assign To</label>
+            <select id="taskEmployeeId" required>
+              <option value="">Select Employee</option>
+            </select>
+          </div>
+          <div>
+            <label>🎯 Priority</label>
+            <select id="taskPriority" required>
+               <option value="">Select Priority </option>
+              <option value="Low">Low</option>
+              <option value="Medium" selected>Medium</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div>
+            <label>📅 Due Date</label>
+            <input type="date" id="taskDueDate" required>
+          </div>
+        </div>
+        <div>
+          <label>📄 Notes</label>
+          <textarea id="taskNotes" placeholder="Additional details..."></textarea>
+        </div>
+        <button type="submit">Create Task</button>
+        <div id="taskMessage" class="message"></div>
+      </form>
+      <div class="card-section">
+        <h3>Active Tasks</h3>
+        <div id="tasksList"></div>
+      </div>
+    </div>
+    
+    <div id="employees" class="content">
+      <h2>Employee Management</h2>
+      <p>Add and manage team members</p>
+      <form id="employeeForm" onsubmit="submitEmployee(event)">
+        <div class="form-grid">
+          <div>
+            <label>🆔 Employee ID</label>
+            <input type="text" id="empId" placeholder="e.g., E001" required>
+          </div>
+          <div>
+            <label>👤 Full Name</label>
+            <input type="text" id="empName" placeholder="e.g., John Smith" required>
+          </div>
+          <div>
+            <label>📧 Email</label>
+            <input type="email" id="empEmail" placeholder="e.g., john@company.com" required>
+          </div>
+          <div>
+            <label>🏢 Department</label>
+            <input type="text" id="empDepartment" placeholder="e.g., IT" required>
+          </div>
+          <div>
+            <label>💼 Position</label>
+            <input type="text" id="empPosition" placeholder="e.g., Developer" required>
+          </div>
+          <div>
+            <label>🔐 Role</label>
+            <select id="empRole" required>
+
+               <option value="">Select Role </option>
+
+              <option value="User">User</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit">Add Employee</button>
+        <div id="empMessage" class="message"></div>
+      </form>
+      <div class="card-section">
+        <h3>Team Directory</h3>
+        <div id="employeesList"></div>
+      </div>
+    </div>
+    
+    <div id="records" class="content">
+      <h2>Attendance Records</h2>
+      <p>Last 30 days of attendance data</p>
+      <div id="recordsList"></div>
+    </div>
+
+    <!-- USER-SPECIFIC CONTENT SECTIONS -->
+    <div id="myProfile" class="content">
+      <h2>My Profile</h2>
+      <p>Your personal information</p>
+      <div id="profileContent"></div>
+    </div>
+
+    <div id="myAttendance" class="content">
+      <h2>My Attendance</h2>
+      <p>Your attendance history</p>
+      <div id="myAttendanceContent"></div>
+    </div>
+
+    <div id="myTasks" class="content">
+      <h2>My Tasks</h2>
+      <p>Tasks assigned to you</p>
+      <div id="myTasksContent"></div>
+    </div>
+  </div>
+  
+  <script>
+    let employees = [];
+    let currentFilter = 'all';
+    let currentUser = null;
+    
+    window.onload = () => {
+      document.addEventListener('click', closeAllTimePickers);
+    };
+    
+    // LOGIN FUNCTIONALITY
+    function handleLogin(e) {
+      e.preventDefault();
+      const employeeId = document.getElementById('loginEmployeeId').value.trim();
+      const btn = e.target.querySelector('button[type="submit"]');
+      
+      btn.disabled = true;
+      btn.textContent = 'Signing In...';
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, message: 'Login failed' });
+          if (result.success && result.data) {
+            currentUser = result.data;
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            
+            document.getElementById('currentUserName').textContent = currentUser.name;
+            document.getElementById('currentUserRole').textContent = currentUser.role;
+            document.getElementById('currentUserRole').className = 'role-badge ' + currentUser.role.toLowerCase();
+            
+            if (currentUser.role === 'Admin') {
+              loadAdminUI();
+            } else {
+              loadUserUI();
+            }
+          } else {
+            showLoginMessage(result.message || 'Invalid Employee ID', false);
+          }
+          btn.disabled = false;
+          btn.textContent = 'Sign In';
+        })
+        .withFailureHandler(error => {
+          showLoginMessage('Login error: ' + error.message, false);
+          btn.disabled = false;
+          btn.textContent = 'Sign In';
+        })
+        .loginUser(employeeId);
+    }
+    
+    function showLoginMessage(message, isSuccess) {
+      const msg = document.getElementById('loginMessage');
+      msg.textContent = (isSuccess ? '✅ ' : '❌ ') + message;
+      msg.className = 'message ' + (isSuccess ? 'success' : 'error');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 5000);
+    }
+    
+    function handleLogout() {
+      if (confirm('Are you sure you want to logout?')) {
+        currentUser = null;
+        employees = [];
+        document.getElementById('mainApp').classList.add('hidden');
+        document.getElementById('loginScreen').classList.remove('hidden');
+        document.getElementById('loginEmployeeId').value = '';
+        
+        const loginBtn = document.querySelector('.login-form button[type="submit"]');
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Sign In';
+        document.getElementById('loginMessage').style.display = 'none';
+      }
+    }
+    
+    // ADMIN UI SETUP
+    function loadAdminUI() {
+      document.getElementById('statsContainer').innerHTML = `
+        <div class="stat-card" onclick="navigateToEmployees()">
+          <div class="stat-icon">👥</div>
+          <h3>Total Employees</h3>
+          <div class="number" id="totalEmployees">0</div>
+          <div class="stat-trend">Click to view all</div>
+        </div>
+        
+        <div class="stat-card" onclick="navigateToRecords()">
+          <div class="stat-icon">✅</div>
+          <h3>Present Today</h3>
+          <div class="number" id="presentToday">0</div>
+          <div class="stat-trend" id="attendanceRate">0% attendance</div>
+        </div>
+        
+        <div class="stat-card" onclick="navigateToTasks('pending')">
+          <div class="stat-icon">📋</div>
+          <h3>Pending Tasks</h3>
+          <div class="number" id="pendingTasks">0</div>
+          <div class="stat-trend">Click to view</div>
+        </div>
+        
+        <div class="stat-card" onclick="navigateToTasks('inprogress')">
+          <div class="stat-icon">⚡</div>
+          <h3>In Progress</h3>
+          <div class="number" id="inProgressTasks">0</div>
+          <div class="stat-trend">Click to view</div>
+        </div>
+        
+        <div class="stat-card" onclick="navigateToTasks('completed')">
+          <div class="stat-icon">🎉</div>
+          <h3>Completed</h3>
+          <div class="number" id="completedTasks">0</div>
+          <div class="stat-trend" id="completionRate">0% complete</div>
+        </div>
+      `;
+      
+      document.getElementById('tabsContainer').innerHTML = `
+        <div class="tab active" onclick="showTab('dashboard')">📊 Dashboard</div>
+        <div class="tab" onclick="showTab('attendance')">🕐 Attendance</div>
+        <div class="tab" onclick="showTab('tasks')">📋 Tasks</div>
+        <div class="tab" onclick="showTab('employees')">👥 Employees</div>
+        <div class="tab" onclick="showTab('records')">📈 Records</div>
+      `;
+      
+      loadDashboard();
+      loadEmployees();
+    }
+    
+    // USER UI SETUP
+    function loadUserUI() {
+      document.getElementById('statsContainer').innerHTML = `
+        <div class="stat-card" onclick="showTab('myProfile')">
+          <div class="stat-icon">👤</div>
+          <h3>My Profile</h3>
+          <div class="number">${currentUser.id}</div>
+          <div class="stat-trend">View details</div>
+        </div>
+        
+        <div class="stat-card" onclick="showTab('myAttendance')">
+          <div class="stat-icon">📅</div>
+          <h3>My Attendance</h3>
+          <div class="number" id="myAttendanceCount">0</div>
+          <div class="stat-trend">Days recorded</div>
+        </div>
+        
+        <div class="stat-card" onclick="showTab('myTasks')">
+          <div class="stat-icon">📋</div>
+          <h3>My Tasks</h3>
+          <div class="number" id="myTasksCount">0</div>
+          <div class="stat-trend">Active tasks</div>
+        </div>
+      `;
+      
+      document.getElementById('tabsContainer').innerHTML = `
+        <div class="tab active" onclick="showTab('myProfile')">👤 My Profile</div>
+        <div class="tab" onclick="showTab('myAttendance')">📅 My Attendance</div>
+        <div class="tab" onclick="showTab('myTasks')">📋 My Tasks</div>
+      `;
+      
+      showTab('myProfile');
+      loadMyProfile();
+      loadMyAttendance();
+      loadMyTasks();
+    }
+    
+    // USER-SPECIFIC FUNCTIONS
+    function loadMyProfile() {
+      document.getElementById('profileContent').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+      
+      const profile = `
+        <div class="card-section">
+          <h3>Personal Information</h3>
+          <div style="display: grid; gap: 20px; margin-top: 20px;">
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+              <strong style="color: rgba(255,255,255,0.6);">Employee ID:</strong>
+              <span style="color: white;">${currentUser.id}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+              <strong style="color: rgba(255,255,255,0.6);">Name:</strong>
+              <span style="color: white;">${currentUser.name}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+              <strong style="color: rgba(255,255,255,0.6);">Email:</strong>
+              <span style="color: white;">${currentUser.email}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+              <strong style="color: rgba(255,255,255,0.6);">Department:</strong>
+              <span style="color: white;">${currentUser.department}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+              <strong style="color: rgba(255,255,255,0.6);">Position:</strong>
+              <span style="color: white;">${currentUser.position}</span>
+            </div>
+            <div style="display: grid; grid-template-columns: 150px 1fr; gap: 10px; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px;">
+              <strong style="color: rgba(255,255,255,0.6);">Role:</strong>
+              <span class="badge ${currentUser.role.toLowerCase()}">${currentUser.role}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('profileContent').innerHTML = profile;
+    }
+    
+    function loadMyAttendance() {
+      document.getElementById('myAttendanceContent').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, data: [] });
+          if (result.success) {
+            document.getElementById('myAttendanceCount').textContent = result.data.length;
+            
+            if (result.data.length === 0) {
+              document.getElementById('myAttendanceContent').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><h3>No Attendance Records</h3><p>Your attendance will appear here once marked</p></div>';
+              return;
+            }
+            
+            let html = '<div class="table-container"><table><thead><tr><th>Date</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Hours</th></tr></thead><tbody>';
+            result.data.forEach(rec => {
+              html += `<tr><td>${rec.date}</td><td>${rec.checkIn}</td><td>${rec.checkOut}</td><td><span class="badge ${rec.status.toLowerCase()}">${rec.status}</span></td><td>${rec.hours}h</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            document.getElementById('myAttendanceContent').innerHTML = html;
+          }
+        })
+        .withFailureHandler(error => showError('Error loading attendance: ' + error.message))
+        .getMyAttendance(currentUser.id);
+    }
+    
+    function loadMyTasks() {
+      document.getElementById('myTasksContent').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, data: [] });
+          if (result.success) {
+            const activeTasks = result.data.filter(t => t.status !== 'Completed');
+            document.getElementById('myTasksCount').textContent = activeTasks.length;
+            
+            if (result.data.length === 0) {
+              document.getElementById('myTasksContent').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📋</div><h3>No Tasks Assigned</h3><p>Tasks assigned to you will appear here</p></div>';
+              return;
+            }
+            
+            let html = '<div class="table-container"><table><thead><tr><th>ID</th><th>Task</th><th>Priority</th><th>Status</th><th>Due Date</th><th>Notes</th><th>Action</th></tr></thead><tbody>';
+            result.data.forEach(task => {
+              html += `<tr><td>${task.id}</td><td>${task.name}</td><td><span class="badge ${task.priority.toLowerCase()}">${task.priority}</span></td><td><span class="badge ${task.status.toLowerCase().replace(' ', '')}">${task.status}</span></td><td>${task.dueDate}</td><td>${task.notes || '-'}</td><td><select onchange="updateMyTask('${task.id}', this.value)" style="padding:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;"><option value="">Update</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            document.getElementById('myTasksContent').innerHTML = html;
+          }
+        })
+        .withFailureHandler(error => showError('Error loading tasks: ' + error.message))
+        .getMyTasks(currentUser.id);
+    }
+    
+    function updateMyTask(taskId, status) {
+      if (!status) return;
+      google.script.run
+        .withSuccessHandler(result => {
+          if (result.success) {
+            loadMyTasks();
+          }
+          alert(result.message);
+        })
+        .updateTaskStatus(taskId, status);
+    }
+    
+    function navigateToEmployees() {
+      showTab('employees', document.querySelector('.tab:nth-child(4)'));
+    }
+    
+    function navigateToRecords() {
+      showTab('records', document.querySelector('.tab:nth-child(5)'));
+    }
+    
+    function navigateToTasks(filter) {
+      currentFilter = filter;
+      showTab('tasks', document.querySelector('.tab:nth-child(3)'));
+    }
+    
+    // Time picker functions
+    function openTimePicker(type) {
+      event.stopPropagation();
+      closeAllTimePickers();
+      document.getElementById(type + 'Picker').classList.add('active');
+      document.querySelector(`[onclick="openTimePicker('${type}')"]`).classList.add('active');
+    }
+    
+    function closeTimePicker(type) {
+      document.getElementById(type + 'Picker').classList.remove('active');
+      document.querySelector(`[onclick="openTimePicker('${type}')"]`).classList.remove('active');
+    }
+    
+    function closeAllTimePickers(e) {
+      if (!e || !e.target.closest('.time-input-wrapper')) {
+        document.querySelectorAll('.time-picker-dropdown').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.time-input').forEach(i => i.classList.remove('active'));
+      }
+    }
+    
+    function adjustTime(type, unit, delta) {
+      const hourEl = document.getElementById(type + 'Hour');
+      const minuteEl = document.getElementById(type + 'Minute');
+      
+      let hour = parseInt(hourEl.textContent);
+      let minute = parseInt(minuteEl.textContent);
+      
+      if (unit === 'hour') {
+        hour = (hour + delta + 24) % 24;
+      } else {
+        minute = (minute + delta + 60) % 60;
+      }
+      
+      hourEl.textContent = hour.toString().padStart(2, '0');
+      minuteEl.textContent = minute.toString().padStart(2, '0');
+    }
+    
+    function applyTime(type) {
+      const hour = document.getElementById(type + 'Hour').textContent;
+      const minute = document.getElementById(type + 'Minute').textContent;
+      const timeString = `${hour}:${minute}`;
+      
+      document.getElementById(type + 'Display').textContent = timeString;
+      document.getElementById('att' + type.charAt(0).toUpperCase() + type.slice(1)).value = timeString;
+      closeTimePicker(type);
+    }
+    
+    function handleResponse(result, defaultValue) {
+      if (!result || typeof result !== 'object') return defaultValue;
+      return result;
+    }
+    
+    function showError(message) {
+      const banner = document.getElementById('errorBanner');
+      banner.textContent = '⚠️ ' + message;
+      banner.style.display = 'block';
+      setTimeout(() => banner.style.display = 'none', 5000);
+    }
+    
+    function showTab(tabName, tabElement) {
+      document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      
+      document.getElementById(tabName).classList.add('active');
+      if (tabElement) {
+        tabElement.classList.add('active');
+      } else if (event && event.target) {
+        event.target.classList.add('active');
+      }
+      
+      if (currentUser && currentUser.role === 'Admin') {
+        if (tabName === 'attendance') {
+          // Reload employees when switching to attendance tab
+          loadEmployees();
+        }
+        if (tabName === 'tasks') {
+          loadEmployees();
+          loadTasks();
+        }
+        if (tabName === 'employees') loadEmployeesList();
+        if (tabName === 'records') loadRecords();
+      } else {
+        if (tabName === 'myProfile') loadMyProfile();
+        if (tabName === 'myAttendance') loadMyAttendance();
+        if (tabName === 'myTasks') loadMyTasks();
+      }
+    }
+    
+    function loadDashboard() {
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, data: {} });
+          if (result.success && result.data) {
+            document.getElementById('totalEmployees').textContent = result.data.totalEmployees || 0;
+            document.getElementById('presentToday').textContent = result.data.presentToday || 0;
+            document.getElementById('pendingTasks').textContent = result.data.pendingTasks || 0;
+            document.getElementById('inProgressTasks').textContent = result.data.inProgressTasks || 0;
+            document.getElementById('completedTasks').textContent = result.data.completedTasks || 0;
+            
+            const attRate = result.data.totalEmployees > 0 
+              ? Math.round((result.data.presentToday / result.data.totalEmployees) * 100) 
+              : 0;
+            document.getElementById('attendanceRate').textContent = attRate + '% attendance';
+            
+            const totalTasks = result.data.pendingTasks + result.data.inProgressTasks + result.data.completedTasks;
+            const compRate = totalTasks > 0 
+              ? Math.round((result.data.completedTasks / totalTasks) * 100) 
+              : 0;
+            document.getElementById('completionRate').textContent = compRate + '% complete';
+            
+            document.querySelector('#dashboard .loading').style.display = 'none';
+          }
+        })
+        .withFailureHandler(error => showError('Dashboard error: ' + error.message))
+        .getDashboardStats();
+    }
+    
+    function loadEmployees() {
+      console.log('🔄 loadEmployees() called');
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          console.log('✅ getEmployeeList response:', result);
+          result = handleResponse(result, { success: false, data: [] });
+          
+          if (result.success) {
+            employees = result.data || [];
+            console.log('👥 Employees loaded:', employees.length, employees);
+            
+            // Populate BOTH dropdowns
+            const attSelect = document.getElementById('attEmployeeId');
+            const taskSelect = document.getElementById('taskEmployeeId');
+            
+            if (attSelect) {
+              attSelect.innerHTML = '<option value="">Select Employee</option>';
+              employees.forEach(emp => {
+                if (emp.status === 'Active') {
+                  attSelect.innerHTML += `<option value="${emp.id}">${emp.id} - ${emp.name}</option>`;
+                }
+              });
+              console.log('✅ Attendance dropdown populated with', attSelect.options.length - 1, 'employees');
+            } else {
+              console.error('❌ attEmployeeId select not found!');
+            }
+            
+            if (taskSelect) {
+              taskSelect.innerHTML = '<option value="">Select Employee</option>';
+              employees.forEach(emp => {
+                if (emp.status === 'Active') {
+                  taskSelect.innerHTML += `<option value="${emp.id}">${emp.id} - ${emp.name}</option>`;
+                }
+              });
+              console.log('✅ Task dropdown populated with', taskSelect.options.length - 1, 'employees');
+            } else {
+              console.error('❌ taskEmployeeId select not found!');
+            }
+          } else {
+            console.error('❌ Result not successful:', result.message);
+          }
+        })
+        .withFailureHandler(error => {
+          console.error('❌ getEmployeeList failed:', error);
+          showError('Failed to load employees: ' + error.message);
+        })
+        .getEmployeeList();
+    }
+    
+    function submitAttendance(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, message: 'Unknown error' });
+          showMessage('attMessage', result.message, result.success);
+          if (result.success) {
+            e.target.reset();
+            document.getElementById('checkInDisplay').textContent = '09:00';
+            document.getElementById('checkOutDisplay').textContent = '17:00';
+            document.getElementById('attCheckIn').value = '09:00';
+            document.getElementById('attCheckOut').value = '17:00';
+            document.getElementById('checkInHour').textContent = '09';
+            document.getElementById('checkInMinute').textContent = '00';
+            document.getElementById('checkOutHour').textContent = '17';
+            document.getElementById('checkOutMinute').textContent = '00';
+            loadDashboard();
+          }
+          btn.disabled = false;
+          btn.textContent = 'Mark Attendance';
+        })
+        .markAttendance(
+          document.getElementById('attEmployeeId').value,
+          document.getElementById('attCheckIn').value,
+          document.getElementById('attCheckOut').value,
+          document.getElementById('attStatus').value
+        );
+    }
+    
+    function submitTask(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Creating...';
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, message: 'Unknown error' });
+          showMessage('taskMessage', result.message, result.success);
+          if (result.success) {
+            e.target.reset();
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('taskDueDate').valueAsDate = tomorrow;
+            loadDashboard();
+            loadTasks();
+          }
+          btn.disabled = false;
+          btn.textContent = 'Create Task';
+        })
+        .createTask(
+          document.getElementById('taskName').value,
+          document.getElementById('taskEmployeeId').value,
+          document.getElementById('taskPriority').value,
+          document.getElementById('taskDueDate').value,
+          document.getElementById('taskNotes').value
+        );
+    }
+    
+    function submitEmployee(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+      
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, message: 'Unknown error' });
+          showMessage('empMessage', result.message, result.success);
+          if (result.success) {
+            e.target.reset();
+            loadEmployees();
+            loadEmployeesList();
+            loadDashboard();
+          }
+          btn.disabled = false;
+          btn.textContent = 'Add Employee';
+        })
+        .addEmployee(
+          document.getElementById('empId').value,
+          document.getElementById('empName').value,
+          document.getElementById('empEmail').value,
+          document.getElementById('empDepartment').value,
+          document.getElementById('empPosition').value,
+          document.getElementById('empRole').value
+        );
+    }
+    
+    function loadTasks() {
+      document.getElementById('tasksList').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, data: [] });
+          if (result.success) {
+            let tasks = result.data;
+            
+            if (currentFilter === 'pending') {
+              tasks = tasks.filter(t => t.status === 'Pending');
+            } else if (currentFilter === 'inprogress') {
+              tasks = tasks.filter(t => t.status === 'In Progress');
+            } else if (currentFilter === 'completed') {
+              tasks = tasks.filter(t => t.status === 'Completed');
+            } else {
+              tasks = tasks.filter(t => t.status !== 'Completed');
+            }
+            
+            if (tasks.length === 0) {
+              document.getElementById('tasksList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><h3>No Tasks Found</h3><p>Create one above!</p></div>';
+              return;
+            }
+            let html = '<div class="table-container"><table><thead><tr><th>ID</th><th>Task</th><th>Assigned</th><th>Priority</th><th>Status</th><th>Due</th><th>Action</th></tr></thead><tbody>';
+            tasks.forEach(task => {
+              html += `<tr><td>${task.id}</td><td>${task.name}</td><td>${task.employeeName}</td><td><span class="badge ${task.priority.toLowerCase()}">${task.priority}</span></td><td><span class="badge ${task.status.toLowerCase().replace(' ', '')}">${task.status}</span></td><td>${task.dueDate}</td><td><select onchange="updateTask('${task.id}', this.value)" style="padding:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:white;"><option value="">Update</option><option value="In Progress">In Progress</option><option value="Completed">Completed</option></select></td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            document.getElementById('tasksList').innerHTML = html;
+          }
+        })
+        .getTasks('all');
+    }
+    
+    function updateTask(taskId, status) {
+      if (!status) return;
+      google.script.run
+        .withSuccessHandler(result => {
+          if (result.success) {
+            loadTasks();
+            loadDashboard();
+          }
+          alert(result.message);
+        })
+        .updateTaskStatus(taskId, status);
+    }
+    
+    function loadEmployeesList() {
+      document.getElementById('employeesList').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, data: [] });
+          if (result.success) {
+            if (result.data.length === 0) {
+              document.getElementById('employeesList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">👥</div><h3>No Employees</h3><p>Add one above!</p></div>';
+              return;
+            }
+            let html = '<div class="table-container"><table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Department</th><th>Position</th><th>Role</th><th>Status</th></tr></thead><tbody>';
+            result.data.forEach(emp => {
+              html += `<tr><td>${emp.id}</td><td>${emp.name}</td><td>${emp.email}</td><td>${emp.department}</td><td>${emp.position}</td><td><span class="badge ${emp.role.toLowerCase()}">${emp.role}</span></td><td><span class="badge ${emp.status.toLowerCase()}">${emp.status}</span></td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            document.getElementById('employeesList').innerHTML = html;
+          }
+        })
+        .getEmployeeList();
+    }
+    
+    function loadRecords() {
+      document.getElementById('recordsList').innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+      google.script.run
+        .withSuccessHandler(result => {
+          result = handleResponse(result, { success: false, data: [] });
+          if (result.success) {
+            if (result.data.length === 0) {
+              document.getElementById('recordsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><h3>No Records</h3><p>Mark attendance first!</p></div>';
+              return;
+            }
+            let html = '<div class="table-container"><table><thead><tr><th>Date</th><th>ID</th><th>Name</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Hours</th></tr></thead><tbody>';
+            result.data.forEach(rec => {
+              html += `<tr><td>${rec.date}</td><td>${rec.employeeId}</td><td>${rec.employeeName}</td><td>${rec.checkIn}</td><td>${rec.checkOut}</td><td><span class="badge ${rec.status.toLowerCase()}">${rec.status}</span></td><td>${rec.hours}h</td></tr>`;
+            });
+            html += '</tbody></table></div>';
+            document.getElementById('recordsList').innerHTML = html;
+          }
+        })
+        .getAttendanceRecords(30);
+    }
+    
+    function showMessage(elementId, message, isSuccess) {
+      const msg = document.getElementById(elementId);
+      msg.textContent = (isSuccess ? '✅ ' : '❌ ') + message;
+      msg.className = 'message ' + (isSuccess ? 'success' : 'error');
+      msg.style.display = 'block';
+      setTimeout(() => msg.style.display = 'none', 5000);
+    }
+    
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    if (document.getElementById('taskDueDate')) {
+      document.getElementById('taskDueDate').valueAsDate = tomorrow;
+    }
+  </script>
+</body>
+</html>
