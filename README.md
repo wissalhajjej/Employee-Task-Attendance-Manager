@@ -2,6 +2,13 @@
 
 Attendance and task tracker with login and roles, built with Google Apps Script and Google Sheets
 
+## Screenshots
+
+![Login](login.png)
+![Dashboard](dashboard.png)
+![Attendance](attendance.png)
+![Tasks](tasks.png)
+
 ## Features
 
 - Login with Employee ID, with Admin and User roles
