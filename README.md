@@ -1,6 +1,6 @@
 # Employee Task & Attendance Manager
 
-Web application built with Google Apps Script and Google Sheets to manage employee attendance and tasks, with role-based access (Admin and User).
+Attendance and task tracker with login and roles, built with Google Apps Script and Google Sheets
 
 ## Features
 
